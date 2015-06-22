@@ -15,9 +15,9 @@ def checkIfInDatabase(ID, file):
                                 return 0
 
 def register(ID, file, CB_ID):
-        DB = open(file,'rw+')
+        DB = open(file,'a+')
 	CB_ID, C_ID_string = getNextCabinet(CABINET_ID)
-        DB.write(ID + '|' + C_ID_string)
+        DB.write(ID + '|' + C_ID_string+'\n')
 	return CB_ID
 
 def getNextCabinet(cabinetID):
