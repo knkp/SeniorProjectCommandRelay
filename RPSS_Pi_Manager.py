@@ -26,9 +26,10 @@ while 1:
 	if conn1.inWaiting()>0:
 		message = conn1.read()
 		if message=='i':
-			#we are receiving an ID, wait for ID ack signal
+			#we are receiving an ID
 			while message is not 'k':
 				message = conn1.read()
+#				conn1.write('a')
 				if message is not 'k':
 					print("got id character: " + message)
 					id.append(message)
@@ -36,6 +37,7 @@ while 1:
 			id_string = ''.join(id)
 			id = []
 			print("ID received, ID is: "+id_string);
+			conn1.flush()
 
 #		messageBytes = bytes(message)
 #		sock.sendall(messageBytes)
