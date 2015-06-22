@@ -2,6 +2,32 @@ import serial
 import socket
 
 
+CABINET_ID = 0
+
+
+def checkIfInDatabase(ID, file):
+        with open(file) as DB_FILE:
+                for line in DB_FILE:
+                        splitLine = line.split('|')
+                        if splitLine[0] is ID:
+                                return 1
+                        else:
+                                return 0
+
+def register(ID, file, CB_ID):
+        DB = open(file,'rw+')
+	CB_ID, C_ID_string = getNextCabinet(CABINET_ID)
+        DB.write(ID + '|' + C_ID_string)
+	return CB_ID
+
+def getNextCabinet(cabinetID):
+        if cabinetID is 0:
+                cabinetID = 1
+        else:
+                cabinetID = 0
+        return cabinetID, str(cabinetID)
+
+
 #print("setting up socket")
 #server_address = ('192.168.0.3',5001)
 
@@ -28,6 +54,7 @@ while 1:
 		if message=='i':
 			#we are receiving an ID
 			while message is not 'k':
+				conn1.write('a')
 				message = conn1.read()
 #				conn1.write('a')
 				if message is not 'k':
@@ -38,6 +65,10 @@ while 1:
 			id = []
 			print("ID received, ID is: "+id_string);
 			conn1.flush()
+			if checkIfInDatabase(id_string,'./DB_FILE') is 1:
+				open_cabinet()
+			else:
+				CABINET_ID = register(id_string, './DB_FILE', CABINET_ID)
 
 #		messageBytes = bytes(message)
 #		sock.sendall(messageBytes)
@@ -53,4 +84,3 @@ while 1:
 		conn1.write(message)
 		conn1.flush()
 		conn2.flush()
-
